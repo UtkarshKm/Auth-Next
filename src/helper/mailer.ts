@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 import bcrypt from "bcryptjs";
 
 export enum EmailType {
-  Verification = "Verification",
-  ResetPassword = "ResetPassword",
+	Verification = "Verification",
+	ResetPassword = "ResetPassword",
 }
 
 interface SendEmailParams {
@@ -62,7 +62,7 @@ export const sendEmail = async ({
 				emailType === EmailType.Verification ? "verifyemail" : "resetpassword"
 			}?token=${hashedToken}
             </p>
-            <!-- TODO: Ensure process.env.DOMAIN is set in your environment variables -->`,
+            `,
 		};
 
 		const mailResponse = await transporter.sendMail(mailOptions);
