@@ -37,8 +37,8 @@ export const sendEmail = async ({
 			host: "sandbox.smtp.mailtrap.io",
 			port: 2525,
 			auth: {
-				user: "5512f958775750", // ❌
-				pass: "cc43275fc8dff1", // ❌  why here not using env variables?
+				user: process.env.MAILTRAP_USER,
+				pass: process.env.MAILTRAP_PASS,
 			},
 		});
 
