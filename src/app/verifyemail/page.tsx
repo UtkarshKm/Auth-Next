@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useEffect, useState} from "react";
 import {toast} from "react-hot-toast";
 import {useRouter, useSearchParams} from "next/navigation";
 import axios from "axios";
@@ -10,53 +10,36 @@ export default function VerifyEmailPage() {
 	const [token, setToken] = useState("");
 	const [verified, setVerified] = useState(false);
 	const [error, setError] = useState(false);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
 
-	// const verifyUserEmail = useCallback(async () => {
-	// 	try {
-	// 		setLoading(true);
-	// 		await axios.post("/api/users/verifyemail", {token});
-	// 		setVerified(true);
-	// 		toast.success("Email verified successfully!");
-	// 	} catch (err: any) {
-	// 		setError(true);
-	// 		console.error("Error verifying email:", err);
-	// 		toast.error(err.response?.data?.error || "Failed to verify email");
-	// 	} finally {
-	// 		setLoading(false);
-	// 	}
-	// }, [token]);
 	useEffect(() => {
 		const urlToken = searchParams.get("token");
 		if (!urlToken) {
 			setError(true);
-			setLoading(false);
 			toast.error("No verification token found in URL.");
 			return;
 		}
-
-		const verifyEmail = async () => {
-			try {
-				setLoading(true);
-				setError(false);
-				await axios.post("/api/users/verifyemail", {token: urlToken});
-				setVerified(true);
-				toast.success("Email verified successfully!");
-			} catch (err: any) {
-				setError(true);
-				console.error("Error verifying email:", err);
-				toast.error(err.response?.data?.error || "Failed to verify email");
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		verifyEmail();
+		setToken(urlToken);
 	}, [searchParams]);
+
+	const verifyEmail = async () => {
+		try {
+			setLoading(true);
+			setError(false);
+			await axios.post("/api/users/verifyemail", {token});
+			setVerified(true);
+			toast.success("Email verified successfully!");
+		} catch (err: any) {
+			setError(true);
+			console.error("Error verifying email:", err);
+			toast.error(err.response?.data?.error || "Failed to verify email");
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-black text-white p-4">
-			{" "}
 			<div className="relative w-full max-w-md space-y-8 p-8 rounded-3xl shadow-2xl bg-gray-900/90 backdrop-filter backdrop-blur-lg border border-opacity-10 border-white">
 				<div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/5 to-purple-500/5 filter blur-3xl"></div>
 				<div className="relative">
@@ -89,7 +72,7 @@ export default function VerifyEmailPage() {
 								? "Your email has been successfully verified!"
 								: error
 								? "Verification failed. Invalid or expired token."
-								: "Please wait while we verify your email."}
+								: "Click the button below to verify your email."}
 						</p>
 					</div>
 
@@ -117,6 +100,15 @@ export default function VerifyEmailPage() {
 									></path>
 								</svg>
 							</div>
+						)}
+
+						{!verified && !loading && token && (
+							<button
+								onClick={verifyEmail}
+								className="w-full flex items-center justify-center py-3 px-4 rounded-lg text-white font-semibold transition duration-200 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+							>
+								Verify Email
+							</button>
 						)}
 
 						{verified && (
