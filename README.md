@@ -24,12 +24,13 @@ This project is built with the following technologies:
 - **Tailwind CSS**: A utility-first CSS framework for rapidly building custom designs.
 - **TypeScript**: Superset of JavaScript that adds static types.
 - **ESLint**: Pluggable linting utility for JavaScript and JSX.
-- **Bun**: Fast all-in-one JavaScript runtime, bundler, test runner, and package manager.
+- **React Hot Toast**: A library for displaying toast notifications.
 
 ## Folder Structure
 
 The `src/` directory contains the core application logic:
 
+- `src/middleware.ts`: Next.js middleware for authentication and route protection.
 - `src/app/`: Contains Next.js pages and API routes.
     - `api/users/`: API endpoints for user authentication (signup, login, logout, me, forgotpassword, verifyemail).
     - `login/`: Login page.
