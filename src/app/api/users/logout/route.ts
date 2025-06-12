@@ -16,8 +16,12 @@ export async function POST() {
 
         return response;
 
-    } catch (error: any) {
-        console.error("Error during logout:", error.message);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        let errorMessage = "An unexpected error occurred during logout.";
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        console.error("Error during logout:", errorMessage);
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }

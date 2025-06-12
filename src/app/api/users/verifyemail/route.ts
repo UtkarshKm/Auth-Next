@@ -42,9 +42,13 @@ export async function POST(request: NextRequest) {
 			},
 			{status: 200}
 		);
-	} catch (error: any) {
+	} catch (error: unknown) {
+		let errorMessage = "Failed to verify email";
+		if (error instanceof Error) {
+			errorMessage = error.message;
+		}
 		return NextResponse.json(
-			{error: error.message || "Failed to verify email"},
+			{error: errorMessage},
 			{status: 500}
 		);
 	}

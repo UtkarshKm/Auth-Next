@@ -46,9 +46,13 @@ export async function POST(request: NextRequest) {
 				status: 201,
 			}
 		);
-	} catch (error: any) {
+	} catch (error: unknown) {
+		let errorMessage = "Failed to sign up user";
+		if (error instanceof Error) {
+			errorMessage = error.message;
+		}
 		return NextResponse.json(
-			{error: error.message || "Failed to sign up user"},
+			{error: errorMessage},
 			{status: 500}
 		);
 	}

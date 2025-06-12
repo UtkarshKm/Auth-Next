@@ -29,8 +29,12 @@ export async function GET(request: NextRequest) {
             success: true,
         });
 
-    } catch (error: any) {
-        console.error("Error fetching user data:", error.message);
-        return NextResponse.json({ error: error.message || "Failed to fetch user data" }, { status: 500 });
+    } catch (error: unknown) {
+        let errorMessage = "Failed to fetch user data";
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        console.error("Error fetching user data:", errorMessage);
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }

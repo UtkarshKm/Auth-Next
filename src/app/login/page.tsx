@@ -20,9 +20,15 @@ export default function LoginPage() {
 			console.log("Response from login:", response.data);
 			toast.success("Login successful!");
 			router.push("/profile"); // Redirect to profile page after successful login
-		} catch (error: any) {
-			console.error("Error during login:", error);
-			toast.error(error.response?.data?.error || "Failed to log in");
+		} catch (error: unknown) {
+			let errorMessage = "Failed to log in";
+			if (axios.isAxiosError(error) && error.response?.data?.error) {
+				errorMessage = error.response.data.error;
+			} else if (error instanceof Error) {
+				errorMessage = error.message;
+			}
+			console.error("Error during login:", error); // Log the original error for more details
+			toast.error(errorMessage);
 		} finally {
 			setLoading(false);
 		}
@@ -132,7 +138,7 @@ export default function LoginPage() {
 					</div>
 
 					<div className="text-center mt-6 text-sm text-gray-400">
-						Don't have an account?{" "}
+						Don&apos;t have an account?{" "}
 						<span
 							onClick={() => router.push("/signup")}
 							className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-300 hover:to-purple-300 cursor-pointer font-medium"

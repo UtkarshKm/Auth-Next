@@ -4,9 +4,16 @@ import {toast} from "react-hot-toast";
 import {useRouter} from "next/navigation";
 import axios from "axios";
 
+interface UserData {
+	_id: string;
+	username: string;
+	email: string;
+	isVerified: boolean;
+}
+
 export default function ProfilePage() {
 	const router = useRouter();
-	const [user, setUser] = useState<any>(null);
+	const [user, setUser] = useState<UserData | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -14,12 +21,18 @@ export default function ProfilePage() {
 		const fetchUserData = async () => {
 			try {
 				setLoading(true);
-				const response = await axios.get("/api/users/me");
+				const response = await axios.get<{data: UserData}>("/api/users/me");
 				setUser(response.data.data);
-			} catch (err: any) {
+			} catch (err: unknown) {
+				let errorMessage = "Failed to fetch user data";
+				if (axios.isAxiosError(err) && err.response?.data?.error) {
+					errorMessage = err.response.data.error;
+				} else if (err instanceof Error) {
+					errorMessage = err.message;
+				}
 				console.error("Error fetching user data:", err);
-				setError(err.response?.data?.error || "Failed to fetch user data");
-				toast.error(err.response?.data?.error || "Failed to fetch user data");
+				setError(errorMessage);
+				toast.error(errorMessage);
 				router.push("/login"); // Redirect to login if fetching user data fails (e.g., not logged in)
 			} finally {
 				setLoading(false);
@@ -34,9 +47,13 @@ export default function ProfilePage() {
 			await axios.post("/api/users/logout");
 			toast.success("Logout successful!");
 			router.push("/login");
-		} catch (err: any) {
+		} catch (err: unknown) {
+			let errorMessage = "Failed to log out";
+			if (err instanceof Error) {
+				errorMessage = err.message;
+			}
 			console.error("Error during logout:", err);
-			toast.error(err.message || "Failed to log out");
+			toast.error(errorMessage);
 		} finally {
 			setLoading(false);
 		}

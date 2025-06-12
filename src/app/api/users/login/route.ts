@@ -54,9 +54,13 @@ export async function POST(request: NextRequest) {
 		});
 
 		return response;
-	} catch (error: any) {
+	} catch (error: unknown) {
+		let errorMessage = "Failed to login user";
+		if (error instanceof Error) {
+			errorMessage = error.message;
+		}
 		return NextResponse.json(
-			{error: error.message || "Failed to login user"},
+			{error: errorMessage},
 			{status: 500}
 		);
 	}

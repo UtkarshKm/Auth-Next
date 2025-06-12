@@ -29,10 +29,16 @@ export default function VerifyEmailPage() {
 			await axios.post("/api/users/verifyemail", {token});
 			setVerified(true);
 			toast.success("Email verified successfully!");
-		} catch (err: any) {
+		} catch (err: unknown) {
 			setError(true);
-			console.error("Error verifying email:", err);
-			toast.error(err.response?.data?.error || "Failed to verify email");
+			let errorMessage = "Failed to verify email";
+			if (axios.isAxiosError(err) && err.response?.data?.error) {
+				errorMessage = err.response.data.error;
+			} else if (err instanceof Error) {
+				errorMessage = err.message;
+			}
+			console.error("Error verifying email:", err); // Log the original error object
+			toast.error(errorMessage);
 		} finally {
 			setLoading(false);
 		}

@@ -67,7 +67,15 @@ export const sendEmail = async ({
 
 		const mailResponse = await transporter.sendMail(mailOptions);
 		return mailResponse;
-	} catch (error: any) {
-		throw new Error(error.message || "Failed to send email");
+	} catch (error: unknown) {
+		let errorMessage = "Failed to send email";
+		if (error instanceof Error) {
+			errorMessage = error.message;
+		} else if (typeof error === "string") {
+			errorMessage = error;
+		}
+		// You might want to log the original error here for debugging purposes
+		// console.error("Original error in sendEmail:", error);
+		throw new Error(`Could not send email: ${errorMessage}`);
 	}
 };

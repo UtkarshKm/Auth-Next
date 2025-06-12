@@ -23,9 +23,15 @@ export default function SignUpPage() {
 			console.log("Response from sign up:", response.data.message);
 			toast.success("Signup successful!");
 			router.push("/login");
-		} catch (error: any) {
-			console.error("Error during sign up:", error);
-			toast.error(error.response?.data?.error || "Failed to sign up");
+		} catch (error: unknown) {
+			let errorMessage = "Failed to sign up";
+			if (axios.isAxiosError(error) && error.response?.data?.error) {
+				errorMessage = error.response.data.error;
+			} else if (error instanceof Error) {
+				errorMessage = error.message;
+			}
+			console.error("Error during sign up:", error); // Log the original error
+			toast.error(errorMessage);
 		} finally {
 			setLoading(false);
 		}
