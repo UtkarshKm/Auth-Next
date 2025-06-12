@@ -1,26 +1,28 @@
 "use client";
 import React, {useEffect, useState} from "react";
 import {toast} from "react-hot-toast";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import axios from "axios";
 
 export default function VerifyEmailPage() {
 	const router = useRouter();
-	const searchParams = useSearchParams();
 	const [token, setToken] = useState("");
 	const [verified, setVerified] = useState(false);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		const urlToken = searchParams.get("token");
+		// Get token from URL using window.location
+		const params = new URLSearchParams(window.location.search);
+		const urlToken = params.get("token");
+
 		if (!urlToken) {
 			setError(true);
 			toast.error("No verification token found in URL.");
 			return;
 		}
 		setToken(urlToken);
-	}, [searchParams]);
+	}, []);
 
 	const verifyEmail = async () => {
 		try {
@@ -32,7 +34,11 @@ export default function VerifyEmailPage() {
 		} catch (err: any) {
 			setError(true);
 			console.error("Error verifying email:", err);
-			toast.error(err.response?.data?.error || "Failed to verify email");
+			if (axios.isAxiosError(err)) {
+				toast.error(err.response?.data?.error || "Failed to verify email");
+			} else {
+				toast.error("Failed to verify email");
+			}
 		} finally {
 			setLoading(false);
 		}
