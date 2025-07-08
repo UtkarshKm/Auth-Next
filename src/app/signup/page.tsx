@@ -88,7 +88,7 @@ export default function SignUpPage() {
 		<div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-black text-white p-4">
 			{" "}
 			<div className="relative w-full max-w-md space-y-8 p-8 rounded-3xl shadow-2xl bg-gray-900/90 backdrop-filter backdrop-blur-lg border border-opacity-10 border-white">
-				{/* <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-500/5 to-purple-500/5 filter blur-3xl"></div> */}
+
 				<div className="relative">
 					<div className="text-center">
 						<div className="mb-4">

@@ -4,6 +4,7 @@ import {NextResponse, NextRequest} from "next/server";
 import bcrypt from "bcryptjs";
 import {sendEmail, EmailType} from "@/helper/mailer";
 
+
 connectToDatabase();
 
 export async function POST(request: NextRequest) {
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
 
 		const savedUser = await newUser.save();
 
-		// Send verification email
+		// Send Verification email
 		await sendEmail({
 			email: savedUser.email,
 			emailType: EmailType.Verification,
