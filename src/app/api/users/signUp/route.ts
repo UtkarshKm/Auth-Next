@@ -55,7 +55,3 @@ export async function POST(request: NextRequest) {
 	}
 }
 
-// Add this to your app/api/users/signup/route.ts
-export async function GET() {
-    return NextResponse.json({ message: "Signup route accessible" }, { status: 200 });
-}
