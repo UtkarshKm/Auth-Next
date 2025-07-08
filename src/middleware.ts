@@ -20,11 +20,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-	matcher: [
-    '/',
-    '/login',
-    '/signup',
-    '/verifyemail',
-    '/profile'
-  ]
+	matcher: ['/((?!api|_next/static|_next/image|.*\\..*).*)'],
 };
